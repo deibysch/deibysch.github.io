@@ -50,32 +50,15 @@
                     marker.setPosition({lat: e.latLng.lat(), lng: e.latLng.lng()});
                 }
                 else if(valorActivo=="Ubicacion"){
-                    // if (navigator.geolocation) {
-                    //     navigator.geolocation.getCurrentPosition(
-                    //         (position) => {
-                    //             console.log(position);
-                    //             const pos = {
-                    //                 lat: position.coords.latitude,
-                    //                 lng: position.coords.longitude,
-                    //             };
-                    //             infoWindow.setPosition(pos);
-                    //             infoWindow.setContent("Location found.");
-                    //             infoWindow.open(map);
-                    //             map.setCenter(pos);
-                    //             map.setZoom(12);
-                    //         },
-                    //         () => {
-                    //             handleLocationError(true, infoWindow, map.getCenter());
-                    //         }
-                    //     );
-                    // } else {
-                    //     // Browser doesn't support Geolocation
-                    //     handleLocationError(false, infoWindow, map.getCenter());
-                    // }
                     if (navigator.geolocation) {
-                        navigator.geolocation.watchPosition(
-                            (position) => {
-                                console.log(position);
+                        let lblPrecision=document.querySelector("#Precision")
+                        var cant=0
+                        let lblContador=document.querySelector("#Contador")
+                        navigator.geolocation.watchPosition(//navigator.geolocation.getCurrentPosition(
+                            success=(position) => {
+                                console.log(position.coords.accuracy);
+                                lblPrecision.innerHTML="______Precision: "+position.coords.accuracy;
+                                lblContador.innerHTML="______Contador: "+(cant+=1);
                                 const pos = {
                                     lat: position.coords.latitude,
                                     lng: position.coords.longitude,
@@ -86,13 +69,17 @@
                                 //map.setCenter(pos);
                                 //map.setZoom(12);
                             },
-                            () => {
-                                handleLocationError(true, infoWindow, map.getCenter());
+                            error=(geoError) => {
+                                alert(geoError.message);
+                            },
+                            options={
+                                enableHighAccuracy: true,
+                                timeout: 5000,//cuantos miliseg esperara para enviar un mensaje de error
+                                maximumAge: 0//antigüedad máxima en miliseg de una posición almacenada en caché que es aceptable devolver
                             }
                         );
                     } else {
-                        // Browser doesn't support Geolocation
-                        handleLocationError(false, infoWindow, map.getCenter());
+                        alert('El navegador no soporta geolocalizacion');
                     }
                 }
                 
@@ -130,6 +117,7 @@
                         coord.splice(0, coord.length-1)
                     }
                 }
+                /*CODIGO BETA PARA PROGRAMAR EL BORRADO DE ALGUN WAYPOINT
                 else if(valorActivo=="x"){
                     const i=Object.keys(directionsRenderer.gm_bindings_.markerOptions)[0];
                     console.log(i);
@@ -139,7 +127,7 @@
                     mark[1].addListener("click", (e) => {
                         alert()
                     })
-                }
+                }*/
             });
         }
         window.initMap = initMap;
@@ -153,11 +141,11 @@
     <label>Seleccionar</label><br>
     <input type='radio' name="Componentes" value="Marcador"/>
     <label>Marcador</label><br>
-    <input type='radio' name="Componentes" value="Ubicacion"/>
+    <input type='radio' name="Componentes" value="Ubicacion" checked/>
     <label>Ubicacion</label><br>
-    <input type='radio' name="Componentes" value="Direcciones" checked/>
+    <label id="Precision">______Precision:</label><br>
+    <label id="Contador">______Contador:</label><br>
+    <input type='radio' name="Componentes" value="Direcciones"/>
     <label>Direcciones</label><br>
-    <input type='radio' name="Componentes" value="x"/>
-    <label>x</label><br>
 </body>
 </html>
