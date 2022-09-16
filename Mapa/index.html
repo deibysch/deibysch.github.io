@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Map</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbsmA32HUIm2uIaBIAiuKM6L0vM86cRxI&callback=initMap&v=weekly" defer></script>
+    <style>
+        #map {
+            height: 80vh;
+            background-color: red;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script>
+        /*
+        https://mockapi.io/projects/632491505c1b435727ab8797
+        GET
+            fetch("https://632491505c1b435727ab8796.mockapi.io/deiby/prueba1")
+                .then(response = response.json())
+                .then(json => {console.log(json)})
+                .catch(err => {console.log(err);})
+
+        POST
+            const todo = {"lat":5.34455,"lng":5.34455};
+
+            fetch(
+                'https://632491505c1b435727ab8796.mockapi.io/deiby/prueba1' 
+                ,{
+                    method: 'POST',
+                    body: JSON.stringify(todo),
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8'
+                    }
+                }
+            )
+                .then(response => response.json())
+                .then(json => {console.log(json);});
+                .catch(err =>{console.log(err);})
+
+        PUT
+            var todo = {"id":2, "lat":0.34455, "lng":0.34455};
+
+            fetch(
+                'https://632491505c1b435727ab8796.mockapi.io/deiby/prueba1/'+todo.id 
+                ,{
+                    method: 'PUT',
+                    body: JSON.stringify(todo),
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8'
+                    }
+                }
+            )
+                .then(response => response.json())
+                .then(json => {console.log(json);})
+                .catch(err =>{console.log(err);})
+        */
+        let map, marker, infoWindow, circle, punto, idWatchPosition;
+        const coord=[]
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: -17.738267, lng: -63.087960 },
+                zoom: 13,
+            });
+                        const directionsService = new google.maps.DirectionsService();
+                        const directionsRenderer = new google.maps.DirectionsRenderer({
+                            draggable: true,
+                            map,
+                        });
+            infoWindow = new google.maps.InfoWindow();
+            marker = new google.maps.Marker({
+                position:  { lat: -17.738267, lng: -63.087960 },
+                map,
+                title: 'Hello World!',
+            })
+            map.addListener("click", (e) => {
+                var valorActivo = document.querySelector('input[name="Componentes"]:checked').value;
+                if(valorActivo=="Seleccionar"){
+                    
+                }
+                else if(valorActivo=="Marcador"){
+                    marker.setPosition({lat: e.latLng.lat(), lng: e.latLng.lng()});
+                }
+                else if(valorActivo=="Ubicacion"){
+                    if (navigator.geolocation) {
+                        if(idWatchPosition!=null){
+                            //    navigator.geolocation.clearWatch(idWatchPosition);
+                            map.setCenter(punto.getPosition());
+                        }
+                        else{
+                            var cant=0
+                            circle = new google.maps.Circle({
+                                strokeColor: "#blue",
+                                strokeOpacity: 0.9,
+                                strokeWeight: 0.2,
+                                fillColor: "blue",
+                                fillOpacity: 0.1,
+                                map,
+                            });
+                            punto=new google.maps.Marker({
+                                //position: map.getCenter(),
+                                icon: {
+                                    path: google.maps.SymbolPath.CIRCLE,
+                                    scale: 10,
+                                },
+                                map: map,
+                            });
+                            idWatchPosition=navigator.geolocation.watchPosition(//navigator.geolocation.getCurrentPosition(
+                                success=(position) => {
+                                    console.log(position);
+                                    console.log(
+                                        `Latitud: ${position.coords.latitude}
+                                        Longitud: ${position.coords.longitude}
+                                        Precision: ${position.coords.accuracy}
+                                        Direccion: ${position.coords.heading}
+                                        Altitud: ${position.coords.altitude}
+                                        Precision: ${position.coords.altitudeAccuracy}
+                                        Velocidad: ${position.coords.speed}
+                                        Fecha: ${position.timestamp}
+                                        Solicitudes: ${cant+=1}
+                                        --------------`
+                                    );
+                                    const pos = {
+                                        lat: position.coords.latitude,
+                                        lng: position.coords.longitude,
+                                    };
+                                    circle.setCenter(pos)
+                                    circle.setRadius(position.coords.accuracy/2/*Math.sqrt(position.coords.accuracy) * 100*/)
+                                    punto.setPosition(pos)
+                                    map.setCenter(pos);
+                                    //map.setZoom(12);
+                                },
+                                error=(geoError) => {
+                                    alert(geoError.message);
+                                },
+                                options={
+                                    enableHighAccuracy: true,
+                                    timeout: 5000,//cuantos miliseg esperara para enviar un mensaje de error
+                                    maximumAge: 0//antigüedad máxima en miliseg de una posición almacenada en caché que es aceptable devolver
+                                }
+                            );
+                        }
+                    } else {
+                        alert('El navegador no soporta geolocalizacion');
+                    }
+                }
+                
+                else if(valorActivo=="Direcciones"){
+                    coord.push({lat: e.latLng.lat(), lng: e.latLng.lng()})
+                    if(coord.length>1){
+                        directionsRenderer.changed()
+                        directionsRenderer.addListener("directions_changed", () => {
+                            //const directions = directionsRenderer.getDirections();
+                            const i=Object.keys(directionsRenderer.gm_bindings_.markerOptions)[0];
+                            ////console.log(Object.keys(directionsRenderer.gm_bindings_.markerOptions[i].ek))
+                            console.log(directionsRenderer.gm_bindings_.markerOptions[i].ek['markers'])
+                            //console.log(directionsRenderer)
+                        });
+                        //console.log(coord)
+                        let puntos=[]
+                        for (let i = 1; i < coord.length-1; i++) {
+                            puntos.push({location: coord[i].lat+', '+ coord[i].lng, stopover:false});
+                        }
+                        directionsService
+                            .route({
+                                origin: coord[0],
+                                destination: coord[coord.length-1], 
+                                waypoints: puntos,
+                                travelMode: google.maps.TravelMode.DRIVING,
+                                avoidTolls: false,
+                                provideRouteAlternatives: false,
+                            })
+                            .then((response) => {
+                                directionsRenderer.setDirections(response);
+                            })
+                            .catch((e) => window.alert("Directions request failed due to " + e));
+                    }
+                    else if(coord.length>2){
+                        coord.splice(0, coord.length-1)
+                    }
+                }
+                /*CODIGO BETA PARA PROGRAMAR EL BORRADO DE ALGUN WAYPOINT
+                else if(valorActivo=="x"){
+                    const i=Object.keys(directionsRenderer.gm_bindings_.markerOptions)[0];
+                    console.log(i);
+                    console.log(directionsRenderer.gm_bindings_.markerOptions[i].ek['markers']);
+                    let mark=directionsRenderer.gm_bindings_.markerOptions[i].ek['markers']
+                    //mark[0].setPosition({lat: -17.738267, lng: -63.087960});
+                    mark[1].addListener("click", (e) => {
+                        alert()
+                    })
+                }*/
+            });
+        }
+        window.initMap = initMap;
+    </script>
+    <!--<link rel="stylesheet" type="text/css" href="../Styles/index.css" />
+    <script type="module" src="../Scripts/index.js"></script>-->
+    
+    
+</head>
+<body>
+    <div id="map"></div>
+    <input type='radio' name="Componentes" value="Seleccionar"/>
+    <label>Seleccionar</label><br>
+    <input type='radio' name="Componentes" value="Marcador"/>
+    <label>Marcador</label><br>
+    <input type='radio' name="Componentes" value="Ubicacion" checked/>
+    <label>Ubicacion</label><br>
+    <input type='radio' name="Componentes" value="Direcciones"/>
+    <label>Direcciones</label><br>
+    <script src="./Scripts/consola.js"></script>
+</body>
+</html>
