@@ -22,7 +22,7 @@
             .then(response=>response.json())
             .then(data=>{console.log(data)})
             .catch(error=>{console.log(error);})*/
-        let map, marker, infoWindow;
+        let map, marker, infoWindow, circle, punto;
         const coord=[]
 
         function initMap() {
@@ -45,6 +45,7 @@
                 //map.setCenter(e.latLng);
                 var valorActivo = document.querySelector('input[name="Componentes"]:checked').value;
                 if(valorActivo=="Seleccionar"){
+                    
                 }
                 else if(valorActivo=="Marcador"){
                     marker.setPosition({lat: e.latLng.lat(), lng: e.latLng.lng()});
@@ -63,9 +64,27 @@
                                     lat: position.coords.latitude,
                                     lng: position.coords.longitude,
                                 };
-                                infoWindow.setPosition(pos);
-                                infoWindow.setContent("Posicion");
-                                infoWindow.open(map);
+                                if(circle==null){
+                                    circle = new google.maps.Circle({
+                                        strokeColor: "#blue",
+                                        strokeOpacity: 0.9,
+                                        strokeWeight: 0.2,
+                                        fillColor: "blue",
+                                        fillOpacity: 0.1,
+                                        map,
+                                    });
+                                    punto=new google.maps.Marker({
+                                        position: map.getCenter(),
+                                        icon: {
+                                            path: google.maps.SymbolPath.CIRCLE,
+                                            scale: 10,
+                                        },
+                                        map: map,
+                                    });
+                                }
+                                circle.setCenter({lat: position.coords.latitude, lng: position.coords.longitude})
+                                circle.setRadius(position.coords.accuracy/2/*Math.sqrt(position.coords.accuracy) * 100*/)
+                                punto.setPosition({lat: position.coords.latitude, lng: position.coords.longitude})
                                 //map.setCenter(pos);
                                 //map.setZoom(12);
                             },
