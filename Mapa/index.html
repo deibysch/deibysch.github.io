@@ -18,6 +18,7 @@
         }
     </style>
     <script>
+
         /*
         https://mockapi.io/projects/632491505c1b435727ab8797
         GET
@@ -112,8 +113,31 @@
                                 map: map,
                             });
                             idWatchPosition=navigator.geolocation.watchPosition(//navigator.geolocation.getCurrentPosition(
-                                success=(position) => {
-                                    console.log(position);
+                                success=async (position) => {
+                                    //console.log(position);
+                                    var todo = {
+                                        "accuracy": position.coords.accuracy,
+                                        "altitude": position.coords.altitude,
+                                        "altitudeAccuracy": position.coords.altitudeAccuracy,
+                                        "heading": position.coords.heading,
+                                        "latitude": position.coords.latitude,
+                                        "longitude": position.coords.longitude,
+                                        "speed": position.coords.speed,
+                                        "timestamp": new Date(position.timestamp)
+                                    }
+                                    await fetch(
+                                        'https://632491505c1b435727ab8796.mockapi.io/deiby/ubicacion' 
+                                        ,{
+                                            method: 'POST',
+                                            body: JSON.stringify(todo),
+                                            headers: {
+                                                'Content-type': 'application/json; charset=UTF-8'
+                                            }
+                                        }
+                                    )
+                                        .then(response => response.json())
+                                        .then(json => {console.log(json);})
+                                        .catch(err =>{console.log(err);});console.log("====")
                                     console.log(
                                         `Latitud: ${position.coords.latitude}
                                         Longitud: ${position.coords.longitude}
