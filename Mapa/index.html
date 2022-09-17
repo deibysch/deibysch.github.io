@@ -115,6 +115,7 @@
                             idWatchPosition=navigator.geolocation.watchPosition(//navigator.geolocation.getCurrentPosition(
                                 success=async (position) => {
                                     //console.log(position);
+                                    cant+=1
                                     var todo = {
                                         "accuracy": position.coords.accuracy,
                                         "altitude": position.coords.altitude,
@@ -123,7 +124,8 @@
                                         "latitude": position.coords.latitude,
                                         "longitude": position.coords.longitude,
                                         "speed": position.coords.speed,
-                                        "timestamp": new Date(position.timestamp)
+                                        "timestamp": new Date(position.timestamp),
+                                        "Solicitud": cant 
                                     }
                                     await fetch(
                                         'https://632491505c1b435727ab8796.mockapi.io/deiby/ubicacion' 
@@ -147,7 +149,7 @@
                                         Precision: ${position.coords.altitudeAccuracy}
                                         Velocidad: ${position.coords.speed}
                                         Fecha: ${new Date(position.timestamp)}
-                                        Solicitudes: ${cant+=1}
+                                        Solicitudes: ${cant}
                                         --------------`
                                     );
                                     const pos = {
