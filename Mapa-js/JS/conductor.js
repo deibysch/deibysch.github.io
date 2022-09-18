@@ -40,7 +40,7 @@ async function EnviarUbicacion(){
                     //console.log(position);
                     cant+=1
                     var todo = {
-                        "id":1,
+                        "id": Linea,
                         "accuracy": position.coords.accuracy,
                         "altitude": position.coords.altitude,
                         "altitudeAccuracy": position.coords.altitudeAccuracy,
