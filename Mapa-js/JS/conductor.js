@@ -74,7 +74,7 @@ async function EnviarUbicacion(){
                         Precision: ${position.coords.altitudeAccuracy}
                         Velocidad: ${position.coords.speed}
                         Fecha: ${new Date(position.timestamp)}
-                        Linea: ${Linea}
+                        Linea: ${Linea}, ID: ${Id}
                         Solicitudes: ${cant}
                         --------------`
                     );
