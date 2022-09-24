@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/MapaReact/static/css/main.46dc9627.css",
+    "main.js": "/MapaReact/static/js/main.3c990d8c.js",
+    "static/js/787.69bea182.chunk.js": "/MapaReact/static/js/787.69bea182.chunk.js",
+    "index.html": "/MapaReact/index.html",
+    "main.46dc9627.css.map": "/MapaReact/static/css/main.46dc9627.css.map",
+    "main.3c990d8c.js.map": "/MapaReact/static/js/main.3c990d8c.js.map",
+    "787.69bea182.chunk.js.map": "/MapaReact/static/js/787.69bea182.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.46dc9627.css",
+    "static/js/main.3c990d8c.js"
+  ]
+}
