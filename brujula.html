@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        cantidad: <p id="cantidad"></p>
+        alpha z: <p id="alpha"></p>
+        beta x: <p id="beta"></p>
+        gamma y: <p id="gamma"></p>
+    </div>
+    <script>
+
+                // if (window.DeviceOrientationEvent) { 
+                //     // Listen for the deviceorientation event and handle the raw data 
+                //     window.addEventListener('deviceorientation', function(eventData) { 
+                //         var compassdir; 
+                //         if(event.webkitCompassHeading) { 
+                //             // Apple works only with this, alpha doesn't work 
+                //             compassdir = event.webkitCompassHeading; 
+                //             console.log("yes: ",compassdir);
+                //         } else {
+                //             compassdir = event.alpha; 
+                //             console.log("no: ",compassdir);
+                //         }
+                //     }); 
+                // } 
+                // window.addEventListener("deviceorientation",function(event) {
+                //     alpha = Math.round(event.alpha);
+                //     beta = Math.round(event.beta);
+                //     gamma = Math.round(event.gamma);
+                //     console.log("alpha: ",alpha,", beta: ", beta, ", gamma: ",gamma);
+                //     alert("alpha: "+alpha+", beta: "+ beta+ ", gamma: "+gamma);
+                //     }, true);
+
+
+        var cantidad=0;
+        window.addEventListener("deviceorientation",function(event) {
+            console.log(event)
+            alert(
+                "\nabsolute: "+event.absolute+
+                "\nalpha: "+event.alpha+
+                "\nbeta: "+event.beta+
+                "\nbubbles: "+event.bubbles+
+                "\ncancelBubble: "+event.cancelBubble+
+                "\ncancelable: "+event.cancelable+
+                "\ncomposed: "+event.composed+
+                "\ncurrentTarget: "+event.currentTarget+
+                "\ndefaultPrevented: "+event.defaultPrevented+
+                "\neventPhase: "+event.eventPhase+
+                "\ngamma: "+event.gamma+
+                "\nisTrusted: "+event.isTrusted+
+                "\npath: "+event.path+
+                "\nsrcElement: "+event.srcElement+
+                "\ntarget: "+event.target+
+                "\ntimeStamp: "+event.timeStamp+
+                "\ntype: "+event.type+
+                "\nreturnValue: "+event.returnValue
+            )
+            cantidad+=1;
+            document.getElementById("cantidad").textContent=cantidad;
+            document.getElementById("alpha").textContent= event.alpha+"";
+            document.getElementById("beta").textContent= event.beta+"";
+            document.getElementById("gamma").textContent= event.gamma+"";
+        }, true);
+
+
+
+        // navigator.geolocation.watchPosition(
+        //             (position) => {
+        //                 cant+=1
+        //                 console.log("Solicitud " + cant + " OK")
+        //                 alert(cant)
+        //             },
+        //             (err) => {
+        //                 console.log("Solicitud " + cant + " Error: ", err.message);
+        //             },
+        //             {
+        //                 enableHighAccuracy: true,
+        //                 timeout: 500,//cuantos miliseg esperara para enviar un mensaje de error
+        //                 maximumAge: 0//antigüedad máxima en miliseg de una posición almacenada en caché que es aceptable devolver
+        //             }
+        //         );
+    </script>
+</body>
+</html>
