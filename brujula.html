@@ -39,36 +39,52 @@
 
 
         var cantidad=0;
-        window.addEventListener("deviceorientation",function(event) {
-            console.log(event)
-            alert(
-                "\nabsolute: "+event.absolute+
-                "\nalpha: "+event.alpha+
-                "\nbeta: "+event.beta+
-                "\nbubbles: "+event.bubbles+
-                "\ncancelBubble: "+event.cancelBubble+
-                "\ncancelable: "+event.cancelable+
-                "\ncomposed: "+event.composed+
-                "\ncurrentTarget: "+event.currentTarget+
-                "\ndefaultPrevented: "+event.defaultPrevented+
-                "\neventPhase: "+event.eventPhase+
-                "\ngamma: "+event.gamma+
-                "\nisTrusted: "+event.isTrusted+
-                "\npath: "+event.path+
-                "\nsrcElement: "+event.srcElement+
-                "\ntarget: "+event.target+
-                "\ntimeStamp: "+event.timeStamp+
-                "\ntype: "+event.type+
-                "\nreturnValue: "+event.returnValue
-            )
-            cantidad+=1;
-            document.getElementById("cantidad").textContent=cantidad;
-            document.getElementById("alpha").textContent= event.alpha+"";
-            document.getElementById("beta").textContent= event.beta+"";
-            document.getElementById("gamma").textContent= event.gamma+"";
-        }, true);
+        // window.addEventListener("deviceorientation",function(event) {
+        // }, true);
 
 
+        let HasCompass= false;
+        function SucessOrientation(event){
+            if(event.alpha){
+                console.log(event)
+                const txt="\nabsolute: "+event.absolute+
+                    "\nalpha: "+event.alpha+
+                    "\nbeta: "+event.beta+
+                    "\nbubbles: "+event.bubbles+
+                    "\ncancelBubble: "+event.cancelBubble+
+                    "\ncancelable: "+event.cancelable+
+                    "\ncomposed: "+event.composed+
+                    "\ncurrentTarget: "+event.currentTarget+
+                    "\ndefaultPrevented: "+event.defaultPrevented+
+                    "\neventPhase: "+event.eventPhase+
+                    "\ngamma: "+event.gamma+
+                    "\nisTrusted: "+event.isTrusted+
+                    "\npath: "+event.path+
+                    "\nsrcElement: "+event.srcElement+
+                    "\ntarget: "+event.target+
+                    "\ntimeStamp: "+event.timeStamp+
+                    "\ntype: "+event.type+
+                    "\nreturnValue: "+event.returnValue;
+                alert(txt)
+                cantidad+=1;
+                document.getElementById("cantidad").textContent=cantidad;
+                document.getElementById("alpha").textContent= event.alpha+"";
+                document.getElementById("beta").textContent= event.beta+"";
+                document.getElementById("gamma").textContent= event.gamma+"";
+                if(!HasCompass)
+                {
+                    HasCompass=true;
+                    alert("dispositivo soporta brujula")
+                }
+            }
+            else{
+                HasCompass=false;
+                window.removeEventListener("deviceorientationabsolute", SucessOrientation, true);
+                alert("dispositivo no soporta brujula")
+            }
+        }
+    
+        window.addEventListener("deviceorientationabsolute", SucessOrientation, true);
 
         // navigator.geolocation.watchPosition(
         //             (position) => {
